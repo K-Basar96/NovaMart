@@ -105,14 +105,19 @@
                                         type: 'POST',
                                         data: {
                                             _token: '{{ csrf_token() }}', // Include CSRF token
-                                            razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                                            razorpay_order_id: paymentResponse.razorpay_order_id,
+                                            razorpay_payment_id: paymentResponse
+                                                .razorpay_payment_id,
+                                            razorpay_order_id: paymentResponse
+                                                .razorpay_order_id,
                                             amount: response.amount,
                                             items: response.items,
                                         },
                                         success: function(successResponse) {
-                                            alert('Payment successful! Order Tracking ID: ' + successResponse .tracking_id);
-                                            window.location.href ="{{ route('order.index') }}";
+                                            alert('Payment successful! Order Tracking ID: ' +
+                                                successResponse
+                                                .tracking_id);
+                                            window.location.href =
+                                                "{{ route('order.index') }}";
                                         },
                                         error: function() {
                                             alert('Payment verification failed.');
@@ -139,7 +144,4 @@
             });
         });
     </script>
-
-
-
 @endsection

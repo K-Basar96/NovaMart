@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WishlistController;
@@ -43,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sliders/admin', [SliderController::class, 'show_sliders'] )->name('admin.sliders');
     Route::resource('sliders', SliderController::class);
     
+    Route::resource('address', AddressController::class);
     
     Route::resource('product', ProductController::class);
     Route::get('/product/search', [ProductController::class, 'show_sliders'] )->name('product.search');
