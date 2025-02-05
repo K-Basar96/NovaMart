@@ -19,6 +19,7 @@ return new class extends Migration
     $table->enum('order_status', ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'])->default('Pending'); // Order status
     $table->foreignId('payment_id')->nullable()->constrained('payments')->onDelete('set null'); // Foreign key to payments table
     $table->json('items'); // JSON column for items
+    $table->json('address'); // JSON column for order address
     $table->timestamps(); 
 });
     }

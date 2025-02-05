@@ -39,6 +39,9 @@
                                     <i class="bi bi-person-circle"></i>&nbsp;Profile
                                 </a>
                             @endif
+                            <a href="{{ route('address.index') }}" class="dropdown-item">
+                                <i class="bi bi-bookmark-plus"></i>&nbsp;Saved Addresses
+                            </a>
                             <a href="#" class="dropdown-item">
                                 <i class="bi bi-truck"></i>&nbsp;Track Order
                             </a>

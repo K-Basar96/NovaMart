@@ -11,6 +11,7 @@ class Order extends Model {
 
     protected $casts = [
         'items' => 'array', // Cast the items column to an array
+        'address' => 'array',
     ];
 
     public function user() {
