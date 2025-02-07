@@ -67,7 +67,8 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Your Wishlist is currently empty.</h5>
-                                <a href="{{ route('allproducts') }}" class="btn btn-primary">Check Products</a>
+                                <a href="{{ route('product.index') }}" class="btn btn-secondary">Check Products</a>
+                                <a href="{{ route('cart.index') }}" class="btn btn-warning">Go to cart</a>
                             </div>
                         </div>
                     @endforelse

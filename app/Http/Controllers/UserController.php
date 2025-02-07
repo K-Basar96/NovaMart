@@ -25,6 +25,15 @@ class UserController extends Controller {
         return view( 'home', compact( 'sliders', 'brands', 'categories', 'newItems', 'bestProducts' ) );
     }
 
+    public function faqs() {
+        return view( 'faqs' );
+
+    }
+
+    public function returnpolicy() {
+        return view( 'returnpolicy' );
+    }
+
     public function index() {
 
     }
