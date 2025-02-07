@@ -10,8 +10,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
-            <form class="d-flex mx-auto w-100" style="max-width: 500px"; role="search" action="route('product.search')"
-                method="POST">
+            <form class="d-flex mx-auto w-100" style="max-width: 500px"; role="search"
+                action="{{ route('product.search') }}" method="POST">
                 @csrf
                 <div class="input-group">
                     <input type="text" class="form-control form-control-lg"

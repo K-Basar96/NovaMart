@@ -9,13 +9,14 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-2">
-                        @foreach ($products as $product)
+                        @forelse ($products as $product)
                             <div class="col">
                                 <div class="card h-100 d-flex flex-column" data-brand="{{ $product->brand }}"
                                     data-category="{{ $product->category }}" data-price="{{ $product->price }}"
                                     data-name="{{ $product->name }}">
-                                    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
-                                        alt="{{ $product->name }}" width="100" height="200">
+                                    <a href="{{ route('product.show', $product->id) }}">
+                                        <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
+                                            alt="{{ $product->name }}" width="100" height="200"></a>
                                     <!-- Wishlist Icon (Love Icon) -->
                                     @php
                                         $inWishlist =
@@ -54,88 +55,15 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="d-flex w-100 justify-content-center">
+                                <h4>No products found.</h4>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
         </div>
     </section>
     @include('user.layout.addtoCart')
-    <script>
-        $(document).ready(function() {
-            function filterProducts() {
-                var selectedBrand = $('select[aria-label="Brand filter"]').val();
-                var selectedCategory = $('select[aria-label="Category filter"]').val();
-                var minPrice = parseFloat($('#minPriceInput').val());
-                var maxPrice = parseFloat($('#maxPriceInput').val());
-                var searchTerm = $('input[name="search"]').val().toLowerCase();
-
-                $('.card').each(function() {
-                    var productBrand = $(this).data('brand').toLowerCase();
-                    var productCategory = $(this).data('category').toLowerCase();
-                    var productPrice = parseFloat($(this).data('price'));
-                    var productName = $(this).data('name').toLowerCase();
-
-                    var brandMatch = selectedBrand === "Choose Brand" || productBrand === selectedBrand
-                        .toLowerCase();
-                    var categoryMatch = selectedCategory === "Choose Category" || productCategory ===
-                        selectedCategory.toLowerCase();
-                    var priceMatch = (isNaN(minPrice) || productPrice >= minPrice) && (isNaN(maxPrice) ||
-                        productPrice <= maxPrice);
-                    var searchMatch = productName.includes(searchTerm);
-
-                    if (brandMatch && categoryMatch && priceMatch && searchMatch) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                });
-            }
-
-            function sortProducts() {
-                var sortBy = $('select[aria-label="Sort by"]').val();
-                var $products = $('.card');
-                var $container = $('.row-cols-1');
-
-                $products.sort(function(a, b) {
-                    var priceA = parseFloat($(a).data('price'));
-                    var priceB = parseFloat($(b).data('price'));
-
-                    if (sortBy === "price-low") {
-                        return priceA - priceB; // Price: Low to High
-                    } else if (sortBy === "price-high") {
-                        return priceB - priceA; // Price: High to Low
-                    }
-                });
-
-                $container.html($products);
-            }
-
-            // Apply Filters Button
-            $('.apply-filter').on('click', function() {
-                filterProducts();
-            });
-
-            // Clear Filters Button
-            $('.clear-filter').on('click', function() {
-                $('select[aria-label="Brand filter"]').val("Choose Brand");
-                $('select[aria-label="Category filter"]').val("Choose Category");
-                $('#minPriceInput').val(0);
-                $('#maxPriceInput').val(1000);
-                $('input[name="search"]').val('');
-                $('.card').show(); // Show all products
-            });
-
-            // Search Form Submission
-            $('form[role="search"]').on('submit', function(e) {
-                e.preventDefault();
-                filterProducts();
-            });
-
-            // Sort Products Dropdown
-            $('select[aria-label="Sort by"]').on('change', function() {
-                sortProducts();
-            });
-        });
-    </script>
 @endsection

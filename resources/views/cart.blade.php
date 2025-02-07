@@ -14,16 +14,21 @@
             @endif
             <div class="col-md-8 table-responsive">
                 <div id="cart-items" class="mb-4">
-                    <table class="table table-striped table-hover table-bordered">
-                        <tr class="table-primary">
-                            <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
+                    <table class="table table-bordered text-center align-content-center">
+                        @if ($cartItems->isNotEmpty())
+                            <tr class="table-primary">
+                                <th>Product Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        @endif
                         <tbody>
                             @forelse($cartItems as $cartItem)
-                                <tr>
+                                <tr class="fs-5">
+                                    <td><img src="{{ asset('storage/' . $cartItem->product->image) }}" height="150"
+                                            width="200" alt="Product Image"></td>
                                     <td>{{ $cartItem->product->name }}</td>
                                     <td class="d-flex justify-content-around">
                                         <form action="{{ route('cart.update', $cartItem->product_id) }}" method="POST">
@@ -49,9 +54,15 @@
                                     $total_price += $cartItem->quantity * $cartItem->product->price;
                                 @endphp
                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">Your cart is empty.</td>
-                                </tr>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Your Cart
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Your cart is empty.</h5>
+                                        <a href="{{ route('product.index') }}" class="btn btn-secondary">Check Products</a>
+                                    </div>
+                                </div>
                             @endforelse
                         </tbody>
                     </table>

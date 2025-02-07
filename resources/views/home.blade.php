@@ -10,7 +10,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 @foreach ($categories as $category)
                     <div class="col">
-                        <a href="{{ route('product.index') }}" class="text-decoration-none">
+                        <a href="{{ route('product.filter.category', $category->id) }}" class="text-decoration-none">
                             <div class="card h-100">
                                 <img src="{{ asset('storage/' . $category->image) }}" class="card-img-top"
                                     alt="{{ $category }}" width="200" height="200">
@@ -32,8 +32,10 @@
                 @foreach ($newItems as $newItem)
                     <div class="col">
                         <div class="card h-100 d-flex flex-column">
-                            <img src="{{ asset('storage/' . $newItem->image) }}" class="card-img-top"
-                                alt="{{ $newItem->name }}" width="300" height="300">
+                            <a href="{{ route('product.show', $newItem->id) }}">
+                                <img src="{{ asset('storage/' . $newItem->image) }}" class="card-img-top"
+                                    alt="{{ $newItem->name }}" width="300" height="300">
+                            </a>
                             <!-- Wishlist Icon (Love Icon) -->
                             @php
                                 $inWishlist =
@@ -81,7 +83,7 @@
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-4">
                 @foreach ($brands as $brand)
                     <div class="col">
-                        <a href="{{ route('allproducts', $brand->id) }}" class="text-decoration-none">
+                        <a href="{{ route('product.filter.brand', $brand->id) }}" class="text-decoration-none">
                             <div class="card h-100">
                                 <img src="{{ asset('storage/' . $brand->logo) }}" class="card-img-top"
                                     alt="{{ $brand }}" width="100" height="100">
@@ -103,8 +105,9 @@
                 @foreach ($bestProducts as $product)
                     <div class="col">
                         <div class="card h-100 d-flex flex-column">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
-                                alt="{{ $product['title'] }}" width="400" height="400">
+                            <a href="{{ route('product.show', $product->id) }}">
+                                <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
+                                    alt="{{ $product['title'] }}" width="400" height="400"></a>
                             <!-- Wishlist Icon (Love Icon) -->
                             @php
                                 $inWishlist =
@@ -143,7 +146,6 @@
             </div>
         </div>
     </section>
+    {{-- Add to cart functionality with AJAX --}}
+    @include('user.layout.addtoCart')
 @endsection
-
-{{-- Add to cart functionality with AJAX --}}
-@include('user.layout.addtoCart')

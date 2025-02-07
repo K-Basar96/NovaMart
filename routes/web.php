@@ -14,24 +14,28 @@ use App\Http\Controllers\WishlistController;
 
 
 Route::get('/', [UserController::class, 'home'])->name('home');
+Route::get('/faqs', [UserController::class, 'faqs'])->name('faqs');
+Route::get('/returnpolicy', [UserController::class, 'returnpolicy'])->name('returnpolicy');
 
+Route::resource('product', ProductController::class)->only(['index', 'show']);
+Route::post('/product/search', [ProductController::class, 'search'] )->name('product.search');
+Route::post('/product/filter', [ProductController::class, 'filter'] )->name('product.filter');
+Route::get('/product/filter/brand/{id}', [ProductController::class, 'filterbyBrand'] )->name('product.filter.brand');
+Route::get('/product/filter/category/{id}', [ProductController::class, 'filterbyCategory'] )->name('product.filter.category');
+Route::get('/product/sortby/{sort}', [ProductController::class, 'sortby'] )->name('product.sortby');
 
-Route::get('/allproducts', function () {
-    return view('allProducts'); })->name('allproducts');
-Route::get('/faqs', function () {
-    return view('faqs'); })->name('faqs');
-Route::get('/returnpolicy', function () {
-    return view('returnpolicy'); })->name('returnpolicy');
 Route::get('order/track',[OrderController::class,'track'])->name('order.track');
 Route::post('order/track',[OrderController::class,'tracking'])->name('order.track');
+
 
 Route::middleware('guest')->group(function () {
     Route::get('user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('user', [UserController::class, 'store'])->name('user.store');
-    
+
     Route::get('/login', [UserController::class, 'login'])->name('login');
     Route::post('/login', [UserController::class, 'login_check']);
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class)->except(['create', 'store']);
@@ -48,10 +52,8 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('address', AddressController::class);
     
-    Route::resource('product', ProductController::class);
-    Route::get('/product/search', [ProductController::class, 'show_sliders'] )->name('product.search');
+    Route::resource('product', ProductController::class)->except(['index', 'show']);
 
-    
     Route::resource('wishlist', WishlistController::class)->except(['index']);
     Route::post('/wishlist/toggle', [WishlistController::class,'toggleWishlist'])->name('wishlist.toggle');
     Route::resource('cart', CartController::class);
@@ -61,7 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::post('order/confirmation',[OrderController::class,'confirmation'])->name('order.confirmation');
     Route::post('order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
     Route::resource('order', OrderController::class);
-    
 });
 
 

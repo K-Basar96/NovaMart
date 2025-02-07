@@ -12,12 +12,94 @@ class ProductController extends Controller {
     * Display a listing of the resource.
     */
 
+    private function getCommonData() {
+        $brands = Brand::all();
+        $categories = Category::all();
+
+        return compact( 'brands', 'categories' );
+    }
+
     public function index() {
         $products = Product::all();
-        $brands = Brand::select( 'name' )->get();
-        $categories = Category::select( 'name' )->get();
+        $data = $this->getCommonData();
 
-        return view( 'allProducts', compact( 'products', 'brands', 'categories' ) );
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+    }
+
+    public function filter( Request $request ) {
+        // return $request->all();
+        // Validate the incoming request data
+        $request->validate( [
+            'brand' => 'nullable|exists:brands,id',
+            'category' => 'nullable|exists:categories,id',
+            'min_price' => 'nullable|numeric|min:0',
+            'max_price' => 'nullable|numeric|min:0',
+        ] );
+
+        // Build the query for products
+        $query = Product::query();
+
+        // Apply filters based on the request
+        if ( $request->filled( 'brand' ) ) {
+            $query->where( 'brand_id', $request->brand );
+        }
+        if ( $request->filled( 'category' ) ) {
+            $query->where( 'category_id', $request->category );
+        }
+
+        if ( $request->filled( 'min_price' ) ) {
+            $query->where( 'price', '>=', $request->min_price );
+        }
+
+        if ( $request->filled( 'max_price' ) ) {
+            $query->where( 'price', '<=', $request->max_price );
+        }
+
+        // Get the filtered products
+        $products = $query->get();
+        // Fetch common data ( brands and categories )
+        $data = $this->getCommonData();
+
+        // Return the view with filtered products
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+    }
+
+    public function filterbyBrand( string $id ) {
+        $products = Product::where( 'brand_id', $id )->get();
+        $data = $this->getCommonData();
+
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+    }
+
+    public function filterbyCategory( string $id ) {
+        $products = Product::where( 'category_id', $id )->get();
+        $data = $this->getCommonData();
+
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+    }
+
+    public function sortBy( string $sort ) {
+        switch ( $sort ) {
+            case 'newest':
+            $products = Product::orderBy( 'created_at', 'desc' )->get();
+            break;
+            case 'oldest':
+            $products = Product::orderBy( 'created_at', 'asc' )->get();
+            break;
+            case 'low_to_high':
+            $products = Product::orderBy( 'price', 'asc' )->get();
+            break;
+            case 'high_to_low':
+            $products = Product::orderBy( 'price', 'desc' )->get();
+            break;
+            default:
+            $products = Product::all();
+            break;
+        }
+
+        $data = $this->getCommonData();
+
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
     }
 
     public function search( Request $request ) {
@@ -38,12 +120,10 @@ class ProductController extends Controller {
             $query->where( 'category', $request->category );
         }
 
-        $products = $query->paginate( 10 );
-
+        $products = $query->get();
+        $data = $this->getCommonData();
         // Return the data for AJAX
-        return response()->json( [
-            'html' => view( 'products.partials.product_list', compact( 'products' ) )->render()
-        ] );
+        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
     }
 
     /**
@@ -51,10 +131,8 @@ class ProductController extends Controller {
     */
 
     public function create() {
-        $brands = Brand::all();
-        $categories = Category::all();
-
-        return view( 'admin.product.addproduct', compact( 'brands', 'categories' ) );
+        $data = $this->getCommonData();
+        return view( 'admin.product.addproduct', array_merge( $data ) );
     }
 
     /**
@@ -92,7 +170,9 @@ class ProductController extends Controller {
     */
 
     public function show( string $id ) {
-        //
+        $data = $this->getCommonData();
+        $product = Product::findOrFail( $id );
+        return view( 'product', array_merge( [ 'product' => $product ], $data ) );
     }
 
     /**
@@ -100,13 +180,11 @@ class ProductController extends Controller {
     */
 
     public function edit( string $id ) {
-        $categories = Category::all();
-        $brands = Brand::all();
+        $data = $this->getCommonData();
         $product = Product::findOrFail( $id );
         $selectedCategoryId = $product->category_id;
         $selectedBrandId = $product->category_id;
-
-        return view( 'admin.product.editProduct', compact( 'product', 'brands', 'categories', 'selectedCategoryId', 'selectedBrandId' ) );
+        return view( 'admin.product.editProduct', array_merge( [ 'products' => $products, 'selectedCategoryId'=>$selectedCategoryId, 'selectedBrandId'=>$selectedBrandId ], $data ) );
     }
 
     /**
