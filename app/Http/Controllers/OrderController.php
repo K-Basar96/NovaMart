@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Exception;
 use App\Models\Cart;
 use App\Models\Order;
 use Razorpay\Api\Api;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +31,7 @@ class OrderController extends Controller {
     public function store( Request $request ) {
     }
 
-    public function checkout( Request $request ) {
+    public function checkout() {
         try {
             $cartItems = Cart::where( 'user_id', Auth::id() )->get();
             $totalAmount = 0;
@@ -52,17 +54,16 @@ class OrderController extends Controller {
                 'currency' => 'INR',
                 'payment_capture' => 1,
             ] );
-
-            return response()->json( [
+            $addresses = Address::where( 'user_id', Auth::id() )->get();
+            // Pass data to the checkout view
+            return view( 'checkout', [
                 'order_id' => $razorpayOrder[ 'id' ],
-                'amount' => $totalAmount,
+                'totalAmount' => $totalAmount,
                 'items' => $items,
+                'addresses' => $addresses,
             ] );
         } catch ( Exception $e ) {
-            return response()->json( [
-                'error' => 'Failed to create Razorpay order.',
-                'message' => $e->getMessage(),
-            ], 500 );
+            return redirect()->back()->with( 'error', 'Failed to prepare checkout. ' . $e->getMessage() );
         }
     }
 
@@ -72,24 +73,15 @@ class OrderController extends Controller {
 
     public function confirmation( Request $request ) {
         try {
-            \Log::info( 'Payment verification data:', [
-                'razorpay_payment_id' => $request->razorpay_payment_id,
-                'razorpay_order_id' => $request->razorpay_order_id,
-                'amount' => $request->amount,
-                'items' => $request->items,
-            ] );
-            // Validate the request
             $request->validate( [
                 'razorpay_payment_id' => 'required',
-                'razorpay_order_id' => 'required',
-                'amount' => 'required|numeric',
+                'total_amount' => 'required|numeric',
                 'items' => 'required|array',
+                'address' => 'required|array',
             ] );
 
-            // Razorpay API
-            $api = new Api( config( 'services.razorpay.key' ), config( 'services.razorpay.secret' ) );
-
             // Verify the payment
+            $api = new Api( config( 'services.razorpay.key' ), config( 'services.razorpay.secret' ) );
             $payment = $api->payment->fetch( $request->razorpay_payment_id );
 
             if ( $payment->status == 'captured' ) {
@@ -98,12 +90,14 @@ class OrderController extends Controller {
                 Order::create( [
                     'user_id' => Auth::id(),
                     'tracking_id' => $trackingId,
-                    'total_amount' => $request->amount,
+                    'total_amount' => $request->total_amount / 100, // Convert back to original amount
                     'order_status' => 'Pending',
-                    'payment_id' => $request->razorpay_payment_id, // Retrieved from Razorpay
+                    'payment_id' => $request->razorpay_payment_id,
                     'items' => json_encode( $request->items ), // Array of cart items
+                    'address' => json_encode( $request->address ), // Array of address
                 ] );
-                // return redirect()->route( 'order.index' )->with( 'success', 'Order placed successfully!' );
+                //clearing user cart
+                Cart::where( 'user_id', Auth::id() )->delete();
                 return response()->json( [ 'order_id' => $request->razorpay_order_id, 'tracking_id' => $trackingId, 'status' => 'success' ] );
             } else {
                 return response()->json( [ 'status' => 'failed' ], 400 );
@@ -112,7 +106,6 @@ class OrderController extends Controller {
             return response()->json( [ 'status' => 'error', 'message' => $e->getMessage() ], 500 );
         }
     }
-
     /**
     * Display the specified resource.
     */
@@ -142,7 +135,33 @@ class OrderController extends Controller {
     * Remove the specified resource from storage.
     */
 
-    public function destroy( Order $order ) {
-        //
+    public function destroy( string $id ) {
+        // this is not required as we would not cancel any order - we will update it as Cancelled.
+    }
+
+    public function cancel( Request $request, string $id ) {
+        $order = Order::findOrFail( $id );
+        if ( $order->user_id == Auth::id() ) {
+            $order->order_status = 'Cancelled';
+            $order->save();
+            return redirect()->back()->with( 'success', 'Order canceled Successfully.' );
+        } else {
+            return redirect()->back()->with( 'failed', "You're not authorized to cancel." );
+        }
+    }
+
+    public function track() {
+        return view( 'ordertrack' );
+    }
+
+    public function tracking( Request $request ) {
+        $request->validate( [
+            'tracking_id' => 'required|string',
+        ] );
+        $order = Order::where( 'tracking_id', $request->tracking_id )->with( 'user' )->first();
+        if ( !$order ) {
+            return response()->json( [ 'error' => 'Order not found' ], 404 );
+        }
+        return response()->json( [ 'order' => $order ] );
     }
 }

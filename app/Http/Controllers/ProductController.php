@@ -13,9 +13,11 @@ class ProductController extends Controller {
     */
 
     public function index() {
-        $products = Product::paginate( 10 );
+        $products = Product::all();
+        $brands = Brand::select( 'name' )->get();
+        $categories = Category::select( 'name' )->get();
 
-        return view( 'products.index', compact( 'products' ) );
+        return view( 'allProducts', compact( 'products', 'brands', 'categories' ) );
     }
 
     public function search( Request $request ) {

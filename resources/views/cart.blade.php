@@ -68,80 +68,9 @@
                         <button type="submit" class="btn btn-secondary me-2"
                             onclick="return confirm('Do you want to clear your cart?');">Clear Cart</button>
                     </form>
-                    <form id="checkout-form" action="{{ route('order.checkout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
-                    </form>
+                    <a href="{{ route('order.checkout') }}" class="btn btn-primary">Proceed to Checkout</a>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-        $(document).ready(function() {
-            console.log('Script is loaded and running.');
-            $('#checkout-form').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        console.log('Response from server:', response);
-                        // Response contains order_id, amount and items
-                        if (response.order_id) {
-                            // Call Razorpay payment gateway
-                            var options = {
-                                key: "{{ config('services.razorpay.key') }}",
-                                amount: response.amount * 100, // Amount in paise
-                                currency: "INR",
-                                name: "NovaMart",
-                                description: "Test Transaction",
-                                order_id: response.order_id,
-                                handler: function(paymentResponse) {
-                                    console.log(paymentResponse);
-                                    $.ajax({
-                                        url: "{{ route('order.confirmation') }}",
-                                        type: 'POST',
-                                        data: {
-                                            _token: '{{ csrf_token() }}', // Include CSRF token
-                                            razorpay_payment_id: paymentResponse
-                                                .razorpay_payment_id,
-                                            razorpay_order_id: paymentResponse
-                                                .razorpay_order_id,
-                                            amount: response.amount,
-                                            items: response.items,
-                                        },
-                                        success: function(successResponse) {
-                                            alert('Payment successful! Order Tracking ID: ' +
-                                                successResponse
-                                                .tracking_id);
-                                            window.location.href =
-                                                "{{ route('order.index') }}";
-                                        },
-                                        error: function() {
-                                            alert('Payment verification failed.');
-                                        }
-                                    });
-                                },
-                                prefill: {
-                                    name: "{{ Auth::user()->name }}",
-                                    email: "{{ Auth::user()->email }}",
-                                    contact: "{{ Auth::user()->phone }}"
-                                },
-                                theme: {
-                                    color: "#F37254"
-                                }
-                            };
-                            var rzp1 = new Razorpay(options);
-                            rzp1.open();
-                        }
-                    },
-                    error: function(xhr) {
-                        alert('Error occurred while processing your request.');
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

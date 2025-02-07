@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('exact_locale');
             $table->string('address_type')->nullable();
             $table->boolean('is_default')->default(false);
+            $table->unique(['user_id', 'address_type']);
         });
     }
 

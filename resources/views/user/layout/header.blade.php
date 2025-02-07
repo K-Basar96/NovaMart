@@ -1,17 +1,16 @@
-@include('user.layout.loginpopup')
 <nav class="navbar navbar-expand-sm mx-1 navbar-dark bg-primary bg-gradient">
     <div class="container-fluid mx-5 header">
         <a class="navbar-brand d-flex" href="{{ route('home') }}">
-            <img src="/images/online-shop.png" alt="online-shop" class="bg-primary logo" height="50px" width="150px"
+            <img src="/images/NovaMart.png" alt="NovaMart" class="bg-primary logo" height="50px" width="150px"
                 style="border-radius: 1% 100% 1% 1%;">
-            <h2>Welcome to Online Shop</h2>
+            <h2>Welcome to NovaMart</h2>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
             aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
-            <form class="d-flex mx-auto w-100" style="max-width: 500px"; role="search" action="route('search')"
+            <form class="d-flex mx-auto w-100" style="max-width: 500px"; role="search" action="route('product.search')"
                 method="POST">
                 @csrf
                 <div class="input-group">
@@ -42,7 +41,7 @@
                             <a href="{{ route('address.index') }}" class="dropdown-item">
                                 <i class="bi bi-bookmark-plus"></i>&nbsp;Saved Addresses
                             </a>
-                            <a href="#" class="dropdown-item">
+                            <a href="{{ route('order.track') }}" class="dropdown-item">
                                 <i class="bi bi-truck"></i>&nbsp;Track Order
                             </a>
                             <a href="{{ route('order.index') }}" class="dropdown-item">
@@ -66,8 +65,12 @@
                 @endauth
                 @guest
                     <li class="nav-item">
-                        <a href="{{ route('login') }}" class="nav-link" data-bs-toggle="modal"
-                            data-bs-target="#loginModal">Login</a>
+                        <a href="{{ route('login') }}" class="nav-link"><i class="bi bi-person-circle"></i>&nbsp;Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('order.track') }}" class="nav-link">
+                            <i class="bi bi-truck"></i>&nbsp;Track Order
+                        </a>
                     </li>
                 @endguest
             </ul>

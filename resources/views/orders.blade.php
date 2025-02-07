@@ -16,7 +16,8 @@
                             <th>Order Tracking Id</th>
                             <th>Total Amount</th>
                             <th>Order Status</th>
-                            <th>Payment Id</th>
+                            <th>Address/Location</th>
+                            <th>Payment</th>
                             <th>Action</th>
                         </tr>
                         <tbody>
@@ -24,10 +25,44 @@
                                 <tr>
                                     <td>{{ $order->tracking_id }}</td>
                                     <td>₹&nbsp;{{ number_format($order->total_amount, 2) }}</td>
-                                    <td>{{ $order->order_status }}</td>
-                                    <td>{{ $order->order_status ? 'Paid' : 'Pending' }}</td>
+                                    <td
+                                        class="{{ $order->order_status == 'Cancelled' ? 'text-danger fw-bold' : ($order->order_status == 'Delivered' ? 'text-success fw-bold' : '') }}">
+                                        {{ $order->order_status }}</td>
+                                    @php
+                                        $addressData = json_decode($order->address);
+                                        $plusCode = $addressData ? $addressData->exact_locale : null;
+                                        $street = $addressData ? $addressData->street : '';
+                                        $city = $addressData ? $addressData->city : '';
+                                        $zipCode = $addressData ? $addressData->zip_code : '';
+
+                                        // Construct the Google Maps link
+                                        $location = $plusCode ? $street . ', ' . $city . ', ' . $zipCode : null;
+                                    @endphp
+                                    <td>{{ $location }} </td>
+                                    <td class="text-success fw-bold">
+                                        {{ $order->payment_id ? ($order->order_status == 'Cancelled' ? 'Refund Proceed' : 'Paid') : 'Pending' }}
+                                    </td>
                                     <td class="d-flex gap-2">
-                                        <a href="{{ route('order.show', $order->id) }}" class="btn btn-outline-secondary w-100">View</a>
+                                        @if ($order->order_status == 'Delivered')
+                                            <a href="{{ route('order.show', $order->id) }}" class="btn btn-success">
+                                                Delivered
+                                            </a>
+                                        @elseif ($order->order_status == 'Cancelled')
+                                            <a href="{{ route('order.show', $order->id) }}" class="btn btn-danger">
+                                                Cancelled
+                                            </a>
+                                        @else
+                                            <a href="{{ route('order.show', $order->id) }}">
+                                                <i class="fs-3 bi bi-eye-fill text-secondary"></i>
+                                            </a>
+                                            <form action="{{ route('order.cancel', $order->id) }}" method="POST"
+                                                onsubmit="return confirm('Do you want to cancel this order?');">
+                                                @csrf
+                                                <button type="submit" class="btn btn-link p-0">
+                                                    <i class="fs-3 bi bi-x-circle-fill text-danger"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

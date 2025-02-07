@@ -10,7 +10,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                 @foreach ($categories as $category)
                     <div class="col">
-                        <a href="#" class="text-decoration-none">
+                        <a href="{{ route('product.index') }}" class="text-decoration-none">
                             <div class="card h-100">
                                 <img src="{{ asset('storage/' . $category->image) }}" class="card-img-top"
                                     alt="{{ $category }}" width="200" height="200">
