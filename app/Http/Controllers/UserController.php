@@ -7,8 +7,9 @@ use App\Models\Slider;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller {
     /**
@@ -41,12 +42,12 @@ class UserController extends Controller {
     */
 
     public function store( Request $request ) {
-        // Validate the request...
-        $request->validate( [
+
+        $validated = $request->validate( [
             'name' => 'required|string|min:3',
-            'email' => 'required | string | email | unique:users,email',
-            'phone' => 'required | numeric | digits:10',
-            'password' => 'required | min:8 | confirmed | regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@])[A-Za-z\d@]+$/',
+            'email' => 'required|string|email|unique:users,email',
+            'phone' => 'required|numeric|digits:10',
+            'password' => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@])[A-Za-z\d@]+$/',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ] );
         // Process the image
@@ -60,7 +61,8 @@ class UserController extends Controller {
             'password' => Hash::make( $request->password ),
             'image' => $imageName,
         ] );
-        return redirect()->route( 'user.login' )->with( 'success', 'User registered successfully.' );
+
+        return redirect()->route( 'login' )->with( 'success', 'User registered successfully.' );
     }
 
     public function login() {

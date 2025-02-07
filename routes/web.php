@@ -22,6 +22,8 @@ Route::get('/faqs', function () {
     return view('faqs'); })->name('faqs');
 Route::get('/returnpolicy', function () {
     return view('returnpolicy'); })->name('returnpolicy');
+Route::get('order/track',[OrderController::class,'track'])->name('order.track');
+Route::post('order/track',[OrderController::class,'tracking'])->name('order.track');
 
 Route::middleware('guest')->group(function () {
     Route::get('user/create', [UserController::class, 'create'])->name('user.create');
@@ -55,8 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('cart', CartController::class);
     // Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
-    Route::post('order/checkout',[OrderController::class,'checkout'])->name('order.checkout');
+    Route::get('order/checkout',[OrderController::class,'checkout'])->name('order.checkout');
     Route::post('order/confirmation',[OrderController::class,'confirmation'])->name('order.confirmation');
+    Route::post('order/{id}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
     Route::resource('order', OrderController::class);
     
 });
