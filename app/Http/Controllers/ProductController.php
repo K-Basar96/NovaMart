@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller {
     /**
@@ -205,10 +206,15 @@ class ProductController extends Controller {
         $product = Product::findOrFail( $id );
 
         if ( $request->hasFile( 'image' ) ) {
+            // Delete the old image from storage
+            if ( $product->image ) {
+                Storage::disk( 'public' )->delete( $product->image );
+            }
+
             $imagePath = $request->file( 'image' )->store( 'images', 'public' );
             $validated[ 'image' ] = $imagePath;
         } else {
-            $validated[ 'image' ] =  $product->image;
+            $validated[ 'image' ] = $product->image;
         }
 
         $product->update( [

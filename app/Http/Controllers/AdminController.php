@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller {
     /**
@@ -71,6 +72,10 @@ class AdminController extends Controller {
 
         // Handle image upload
         if ( $request->hasFile( 'image' ) ) {
+            if ( $user->image ) {
+                // Delete the old image from storage
+                Storage::disk( 'public' )->delete( $user->image );
+            }
             $imageName = $request->file( 'image' )->store( 'images', 'public' );
             $user->image = $imageName;
         }

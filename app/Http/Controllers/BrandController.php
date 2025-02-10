@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller {
     /**
@@ -78,10 +79,14 @@ class BrandController extends Controller {
         ] );
 
         if ( $request->hasFile( 'logo' ) ) {
+            // Delete the old logo from storage
+            if ( $brand->logo ) {
+                Storage::disk( 'public' )->delete( $brand->logo );
+            }
             $imagePath = $request->file( 'logo' )->store( 'products', 'public' );
             $validated[ 'logo' ] = $imagePath;
         } else {
-            $validated[ 'logo' ] =  $brand->logo;
+            $validated[ 'logo' ] = $brand->logo;
         }
 
         $brand->update( [

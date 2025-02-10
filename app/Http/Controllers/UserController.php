@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller {
     /**
@@ -132,12 +133,15 @@ class UserController extends Controller {
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ] );
         $user = Auth::user();
-
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
 
         if ( $request->hasFile( 'image' ) ) {
+            // Delete the old image from storage
+            if ( $user->image ) {
+                Storage::disk( 'public' )->delete( $user->image );
+            }
             $imageName = $request->file( 'image' )->store( 'images', 'public' );
             $user->image = $imageName;
         }

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Slider;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class SliderController extends Controller {
     /**
@@ -92,10 +93,15 @@ class SliderController extends Controller {
             'button_url' => 'required|url',
         ] );
         if ( $request->hasFile( 'image' ) ) {
+            // Delete the old image from storage
+            if ( $slider->image ) {
+                Storage::disk( 'public' )->delete( $slider->image );
+            }
+
             $imagePath = $request->file( 'image' )->store( 'images', 'public' );
             $validated[ 'image' ] = $imagePath;
         } else {
-            $validated[ 'image' ] =  $slider->image;
+            $validated[ 'image' ] = $slider->image;
         }
 
         $slider->update( [
