@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
@@ -13,9 +14,8 @@ class WishlistController extends Controller {
 
     public function index() {
         $user = auth()->user();
-        $wishlists = $user->wishlists;
-        // return $wishlist;
-        return view( 'wishlists', compact( 'wishlists' ) );
+        $wishlists = $user->wishlists()->with( 'product', 'product.category', 'product.brand' )->get();
+        return view( 'wishlists', compact( 'wishlists', 'user' ) );
     }
 
     public function toggleWishlist( Request $request ) {
@@ -92,9 +92,9 @@ class WishlistController extends Controller {
     */
 
     public function show( string $id ) {
-        $user = auth()->user();
+        $user = User::findorfail($id);
         $wishlists = $user->wishlists()->with( 'product', 'product.category', 'product.brand' )->get();
-        return view( 'wishlists', compact( 'wishlists' ) );
+        return view( 'wishlists', compact( 'wishlists','user' ) );
     }
 
     /**
@@ -120,6 +120,6 @@ class WishlistController extends Controller {
     public function destroy( string $id ) {
         $user = auth()->user();
         $user->wishlists()->delete();
-        return redirect()->route( 'wishlist.show', $user->id )->with( 'success', 'Wishlist cleared successfully!' );
+        return redirect()->route( 'wishlist.index', $user->id )->with( 'success', 'Wishlist cleared successfully!' );
     }
 }

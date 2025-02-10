@@ -50,7 +50,7 @@
                             <a class="dropdown-item" href="{{ route('cart.index') }}">
                                 <i class="bi bi-cart-fill"></i>&nbsp;Cart
                             </a>
-                            <a class="dropdown-item" href="{{ route('wishlist.show', Auth::id()) }}">
+                            <a class="dropdown-item" href="{{ route('wishlist.index') }}">
                                 <i class="bi bi-heart-fill"></i>&nbsp;Wishlist
                             </a>
                             <hr class="dropdown-divider" />

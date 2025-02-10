@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Log;
 use Exception;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Order;
 use Razorpay\Api\Api;
 use App\Models\Address;
@@ -113,6 +114,12 @@ class OrderController extends Controller {
     public function show( string $id ) {
         $order = Order::with( 'user' )->findOrFail( $id );
         return view( 'vieworder', compact( 'order' ) );
+    }
+
+    public function show_orders( string $id ) {
+        $user = User::find( $id );
+        $orders = Order::with( 'user' )->where( 'user_id', $id )->get();
+        return view( 'orders', compact( 'orders', 'user' ) );
     }
 
     /**

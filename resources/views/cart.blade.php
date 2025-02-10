@@ -3,7 +3,11 @@
 @section('content')
     <div class="container my-3 justify-content-centre">
         <div class="row justify-content-center">
-            <h1 class="mb-4">Your Cart</h1>
+            <h1 class="mb-4">Cart
+                @if (Auth::id() != $user->id)
+                    of {{ $user->name }}
+                @endif
+            </h1>
             @php
                 $total_price = 0.0;
             @endphp
@@ -58,7 +62,7 @@
                                     <div class="card-header">
                                         Your Cart
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body text-center">
                                         <h5 class="card-title">Your cart is empty.</h5>
                                         <a href="{{ route('product.index') }}" class="btn btn-secondary">Check Products</a>
                                     </div>
@@ -68,7 +72,7 @@
                     </table>
                 </div>
             </div>
-            <div class="text-end" {{ $cartItems->isEmpty() ? 'hidden' : '' }}>
+            <div class="text-end" {{ $cartItems->isEmpty() || Auth::id() != $user->id ? 'hidden' : '' }}>
                 <div id="cart-summary" class="text-end mb-4">
                     <h4>Total: ₹&nbsp;<span id="cart-total">{{ number_format($total_price, 2) }}</span></h4>
                 </div>

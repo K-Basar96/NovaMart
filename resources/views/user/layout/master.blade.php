@@ -17,11 +17,11 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <header>
+    <header class="fixed-top">
         @include('user.layout.header')
     </header>
 
-    <main class="flex-grow-1">
+    <main class="flex-grow-1" style="padding-top: 60px;">
         @yield('content')
     </main>
 

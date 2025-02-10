@@ -4,7 +4,11 @@
 @section('content')
     <div class="container my-3 justify-content-center">
         <div class="row justify-content-center">
-            <h1 class="mb-4">Wishlist</h1>
+            <h1 class="mb-4">Wishlist
+                @if (Auth::id() != $user->id)
+                    of {{ $user->name }}
+                @endif
+            </h1>
 
             @if (session('success'))
                 <div class="alert alert-success">
@@ -16,7 +20,8 @@
                 <form action="{{ route('wishlist.destroy', Auth::id()) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" {{ $wishlists->isEmpty() ? 'hidden' : '' }}>Clear
+                    <button type="submit" class="btn btn-danger"
+                        {{ $wishlists->isEmpty() || Auth::id() != $user->id ? 'hidden' : '' }}>Clear
                         Wishlist</button>
                 </form>
             </div>
@@ -41,21 +46,25 @@
                                         </p>
                                         <p class="card-text">{{ $wishlist->product->description }}</p>
                                         <h6 class="card-text">₹&nbsp;{{ $wishlist->product->price }}</h6>
-                                        <form action="{{ route('wishlist.store') }}" method="POST"
-                                            class="add-to-cart-form">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $wishlist->product->id }}">
-                                            <input type="hidden" name="quantity" value="1" min="1">
-                                            <button type="submit" class="btn btn-primary">Move to Cart</button>
-                                        </form>
-                                        <!-- Add to Wishlist Button -->
-                                        <form action="{{ route('wishlist.toggle') }}" method="POST"
-                                            class="add-to-cart-form mt-1">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $wishlist->product->id }}">
-                                            @php $inWishlist = auth()->user()->wishlists->contains('product_id', $wishlist->product->id); @endphp
-                                            <button type="submit" class="btn btn-danger"> Remove from Wishlist</button>
-                                        </form>
+                                        <div {{ Auth::id() != $user->id ? 'hidden' : '' }}>
+                                            <form action="{{ route('wishlist.store') }}" method="POST"
+                                                class="add-to-cart-form">
+                                                @csrf
+                                                <input type="hidden" name="product_id"
+                                                    value="{{ $wishlist->product->id }}">
+                                                <input type="hidden" name="quantity" value="1" min="1">
+                                                <button type="submit" class="btn btn-primary">Move to Cart</button>
+                                            </form>
+                                            <!-- Add to Wishlist Button -->
+                                            <form action="{{ route('wishlist.toggle') }}" method="POST"
+                                                class="add-to-cart-form mt-1">
+                                                @csrf
+                                                <input type="hidden" name="product_id"
+                                                    value="{{ $wishlist->product->id }}">
+                                                @php $inWishlist = auth()->user()->wishlists->contains('product_id', $wishlist->product->id); @endphp
+                                                <button type="submit" class="btn btn-danger"> Remove from Wishlist</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
