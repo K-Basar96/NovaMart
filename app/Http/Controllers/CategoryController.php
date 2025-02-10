@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller {
     /**
@@ -78,10 +79,15 @@ class CategoryController extends Controller {
         ] );
 
         if ( $request->hasFile( 'image' ) ) {
+            // Delete the old image from storage
+            if ( $category->image ) {
+                Storage::disk( 'public' )->delete( $category->image );
+            }
+
             $imagePath = $request->file( 'image' )->store( 'categories', 'public' );
             $validated[ 'image' ] = $imagePath;
         } else {
-            $validated[ 'image' ] =  $category->image;
+            $validated[ 'image' ] = $category->image;
         }
 
         $category->update( [
