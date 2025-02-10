@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller {
@@ -99,7 +100,8 @@ class AdminController extends Controller {
     }
 
     public function show_orders() {
-        return view( 'admin.orders' );
+        $orders = Order::all();
+        return view( 'admin.orders', compact( 'orders' ) );
     }
 
     public function services() {
@@ -107,8 +109,9 @@ class AdminController extends Controller {
     }
 
     public function show_users() {
-        $users = User::paginate( 5 );
-        return view( 'admin.registeredUser', compact( 'users' ) );
+        $users = User::where( 'id', '!=', 1 )
+        ->paginate( 5 );
+        return view( 'admin.client.registeredUser', compact( 'users' ) );
     }
 
     public function show_pages() {

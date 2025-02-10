@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Order;
 use Razorpay\Api\Api;
 use App\Models\Product;
@@ -16,7 +17,7 @@ class CartController extends Controller {
     public function index() {
         $user = auth()->user();
         $cartItems = $user->carts()->with( 'product' )->get();
-        return view( 'cart', compact( 'cartItems' ) );
+        return view( 'cart', compact( 'cartItems', 'user' ) );
     }
 
     /**
@@ -64,7 +65,9 @@ class CartController extends Controller {
     */
 
     public function show( string $id ) {
-        //
+        $user = User::findorfail($id);
+        $cartItems = $user->carts()->with( 'product' )->get();
+        return view( 'cart', compact( 'cartItems', 'user' ) );
     }
 
     /**

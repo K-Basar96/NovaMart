@@ -54,10 +54,9 @@ Route::middleware('auth')->group(function () {
     
     Route::resource('product', ProductController::class)->except(['index', 'show']);
 
-    Route::resource('wishlist', WishlistController::class)->except(['index']);
+    Route::resource('wishlist', WishlistController::class)->except(['show']);
     Route::post('/wishlist/toggle', [WishlistController::class,'toggleWishlist'])->name('wishlist.toggle');
     Route::resource('cart', CartController::class);
-    // Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
     Route::get('order/checkout',[OrderController::class,'checkout'])->name('order.checkout');
     Route::post('order/confirmation',[OrderController::class,'confirmation'])->name('order.confirmation');
@@ -66,17 +65,20 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['admin'])->controller(AdminController::class)->group(function () {
-    Route::get('wishlist', [WishlistController::class,'index'])->name('wishlist.index');
-    Route::get('/settings', 'open_settings' )->name('admin.settings');
-    Route::get('/products', 'show_products' )->name('admin.products');
-    Route::get('/orders', 'show_orders' )->name('admin.orders');
-    Route::get('/services', 'services' )->name('admin.services');
-    Route::get('/users', 'show_users' )->name('admin.users');
-    Route::get('/pages', 'show_pages' )->name('admin.pages');
+Route::middleware(['admin'])->group(function () {
+    Route::resource('wishlist', WishlistController::class)->only(['show']);
+    Route::get('/settings', [AdminController::class,'open_settings'] )->name('admin.settings');
+    Route::get('/products', [AdminController::class,'show_products'] )->name('admin.products');
+    Route::get('/orders', [AdminController::class,'show_orders'] )->name('admin.orders');
+    Route::get('users/{id}/orders',[OrderController::class,'show_orders'])->name('users.order');
+    Route::get('/services', [AdminController::class,'services'] )->name('admin.services');
+    Route::get('/users', [AdminController::class,'show_users'] )->name('admin.users');
+    Route::get('/pages', [AdminController::class,'show_pages'] )->name('admin.pages');
+
+
+    Route::resource('admin', AdminController::class);
 });
 
-Route::resource('admin', AdminController::class)->middleware('admin');
 
 
 
