@@ -119,15 +119,23 @@ class OrderController extends Controller {
     public function show_orders( string $id ) {
         $user = User::find( $id );
         $orders = Order::with( 'user' )->where( 'user_id', $id )->get();
-        return view( 'orders', compact( 'orders', 'user' ) );
+        return view( 'admin.orders', compact( 'orders', 'user' ) );
     }
 
     /**
     * Show the form for editing the specified resource.
     */
 
-    public function edit( Order $order ) {
-        //
+    public function edit( string $id ) {
+        $order = Order::findOrFail( $id );
+        $statusSteps = [ 'Pending', 'Processing', 'Shipped', 'Delivered' ];
+        $currentStatus = array_search( $order->order_status, $statusSteps );
+
+        if ( $currentStatus < count( $statusSteps ) - 1 ) {
+            $order->order_status = $statusSteps[ $currentStatus + 1 ];
+            $order->save();
+        }
+        return redirect()->back()->with( 'success', 'Order status updated successfully.' );
     }
 
     /**

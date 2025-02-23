@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone')->unique(); // Phone Number
             $table->string('password'); // Password Hash
             $table->string('image'); // Profile Picture (required)
-            $table->string('role')->default('user'); // Role (default is 'user') 
+            $table->enum('role', ['admin', 'user'])->default('user'); // Role (default is 'user') 
             $table->timestamps(); // Created at and Updated at
         });
     }

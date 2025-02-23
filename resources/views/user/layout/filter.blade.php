@@ -8,46 +8,75 @@
                 </div>
                 <form action="{{ route('product.filter') }}" method="POST" style="display: contents">
                     @csrf
-                    <!-- Brand Dropdown -->
-                    <div class="col-md-2">
-                        <select name="brand" class="form-select" aria-label="Brand filter">
-                            <option hidden selected value="">Choose Brand</option>
-                            @forelse ($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @empty
-                                <option value="" disabled>No Brands found</option>
-                            @endforelse
-                        </select>
+                    {{-- Brand Dropdown --}}
+                    <div class="mx-2">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button"
+                                id="brandDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ !empty($filters['brand']) ? 'Selected Brand' : 'Choose Brand' }}
+                            </button>
+                            <ul class="dropdown-menu p-2" aria-labelledby="brandDropdown"
+                                style="max-height: 200px; overflow-y: auto;">
+                                @forelse ($brands as $brand)
+                                    <li>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="brand[]"
+                                                value="{{ $brand->id }}" id="brand{{ $brand->id }}"
+                                                {{ isset($filters['brand']) && in_array($brand->id, $filters['brand']) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="brand{{ $brand->id }}">
+                                                {{ $brand->name }}
+                                            </label>
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li class="dropdown-item text-muted">No Brands found</li>
+                                @endforelse
+                            </ul>
+                        </div>
                     </div>
 
                     <!-- Category Dropdown -->
-                    <div class="col-md-2">
-                        <select name="category" class="form-select" aria-label="Category filter">
-                            <option hidden selected value="">Choose Category</option>
-                            @forelse ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @empty
-                                <option value="" disabled>No Category found</option>
-                            @endforelse
-                        </select>
+                    <div class="mx-2">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button"
+                                id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ !empty($filters['category']) ? 'Selected Category' : 'Choose Category' }}
+                            </button>
+                            <ul class="dropdown-menu p-2" aria-labelledby="categoryDropdown"
+                                style="max-height: 200px; overflow-y: auto;">
+                                @forelse ($categories as $category)
+                                    <li>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="category[]"
+                                                value="{{ $category->id }}" id="category{{ $category->id }}"
+                                                {{ isset($filters['category']) && in_array($category->id, $filters['category']) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="category{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </label>
+                                        </div>
+                                    </li>
+                                @empty
+                                    <li class="dropdown-item text-muted">No Categories found</li>
+                                @endforelse
+                            </ul>
+                        </div>
                     </div>
 
                     <!-- Price Range bar -->
-                    <div class="col-md-3">
-                        <label class="form-label">Select Price Range:</label>
+                    <div class="col-md-3 mx-3 text-center">
                         <div class="range_container">
                             <div class="form_control">
                                 <div class="control_container d-flex align-items-center gap-2">
-                                    <div class="input-group" style="width: 45%;">
-                                        <span class="input-group-text">Min</span>
-                                        <input type="number" name="min_price" class="form-control" value=""
-                                            placeholder="Min">
+                                    <div class="form-floating" style="width: 45%;">
+                                        <input type="number" name="min_price" class="form-control" id="minPrice"
+                                            value="{{ $filters['min_price'] ?? '' }}" placeholder="Min Price">
+                                        <label for="minPrice">Min Price</label>
                                     </div>
                                     <span class="text-muted">-</span>
-                                    <div class="input-group" style="width: 45%;">
-                                        <span class="input-group-text">Max</span>
-                                        <input type="number" name="max_price" class="form-control" value=""
-                                            placeholder="Max">
+                                    <div class="form-floating" style="width: 45%;">
+                                        <input type="number" name="max_price" class="form-control" id="maxPrice"
+                                            value="{{ $filters['max_price'] ?? '' }}" placeholder="Max Price">
+                                        <label for="maxPrice">Max Price</label>
                                     </div>
                                 </div>
                             </div>

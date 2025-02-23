@@ -28,11 +28,11 @@ class ProductController extends Controller {
     }
 
     public function filter( Request $request ) {
-        // return $request->all();
-        // Validate the incoming request data
         $request->validate( [
-            'brand' => 'nullable|exists:brands,id',
-            'category' => 'nullable|exists:categories,id',
+            'brand' => 'nullable|array',
+            'brand.*' => 'exists:brands,id',
+            'category' => 'nullable|array',
+            'category.*' => 'exists:categories,id',
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
         ] );
@@ -42,41 +42,43 @@ class ProductController extends Controller {
 
         // Apply filters based on the request
         if ( $request->filled( 'brand' ) ) {
-            $query->where( 'brand_id', $request->brand );
+            $query->whereIn( 'brand_id', $request->brand );
         }
         if ( $request->filled( 'category' ) ) {
-            $query->where( 'category_id', $request->category );
+            $query->whereIn( 'category_id', $request->category );
         }
-
         if ( $request->filled( 'min_price' ) ) {
             $query->where( 'price', '>=', $request->min_price );
         }
-
         if ( $request->filled( 'max_price' ) ) {
             $query->where( 'price', '<=', $request->max_price );
         }
-
-        // Get the filtered products
+        // Get filtered products
         $products = $query->get();
-        // Fetch common data ( brands and categories )
         $data = $this->getCommonData();
 
-        // Return the view with filtered products
-        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+        $filters = [
+            'brand' => $request->brand ?? [], // Ensure it's an array
+            'category' => $request->category ?? [],
+            'min_price' => $request->min_price,
+            'max_price' => $request->max_price,
+        ];
+        return view('allProducts', array_merge(['products' => $products, 'filters' => $filters], $data));
+    }
+    
+
+    public function filterbyBrand(string $id) {
+        $products = Product::where('brand_id', $id)->get();
+        $data = $this->getCommonData();
+        $filters = ['brand' => [$id]];
+        return view('allProducts', array_merge(['products' => $products, 'filters' => $filters], $data));
     }
 
-    public function filterbyBrand( string $id ) {
-        $products = Product::where( 'brand_id', $id )->get();
+    public function filterbyCategory(string $id) {
+        $products = Product::where('category_id', $id)->get();
         $data = $this->getCommonData();
-
-        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
-    }
-
-    public function filterbyCategory( string $id ) {
-        $products = Product::where( 'category_id', $id )->get();
-        $data = $this->getCommonData();
-
-        return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
+        $filters = ['category' => [$id]];
+        return view( 'allProducts', array_merge( [ 'products' => $products, 'filters' => $filters ], $data ) );
     }
 
     public function sortBy( string $sort ) {
@@ -99,7 +101,6 @@ class ProductController extends Controller {
         }
 
         $data = $this->getCommonData();
-
         return view( 'allProducts', array_merge( [ 'products' => $products ], $data ) );
     }
 
@@ -146,9 +147,9 @@ class ProductController extends Controller {
             'description' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'category_id' => 'required|exists:categories, id',
+            'brand_id' => 'required|exists:brands, id',
+            'image' => 'required|image|mimes:jpeg, png, jpg|max:2048',
         ] );
 
         $imagePath = $request->file( 'image' )->store( 'images', 'public' );
@@ -198,9 +199,9 @@ class ProductController extends Controller {
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // Optional image
+            'category_id' => 'required|exists:categories, id',
+            'brand_id' => 'required|exists:brands, id',
+            'image' => 'nullable|image|mimes:jpeg, png, jpg|max:10240', // Optional image
         ] );
 
         $product = Product::findOrFail( $id );
@@ -239,5 +240,5 @@ class ProductController extends Controller {
         $product->delete();
 
         return redirect()->route( 'admin.products' )->with( 'success', 'Product deleted successfully!' );
+        }
     }
-}

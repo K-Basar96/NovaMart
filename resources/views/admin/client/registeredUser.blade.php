@@ -9,6 +9,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <h1 class="mb-4 text-center">Users List</h1>
         <a href="{{ route('user.create') }}" class="btn btn-outline-primary mb-3">Add User</a>
         <div class="table-responsive">
@@ -30,8 +35,12 @@
                             <td><img src="{{ asset('storage/' . $user->image) }}" alt="Profile Image" height="100px"
                                     width="100px"></td>
                             <td>
-                                @if ($user->role == 'user')
-                                    {{ $user->role }} <a href="{{ route('home') }}"class="bi bi-pencil-square"></a>
+                                {{ $user->role }}
+                                @if ($user->id == 1)
+                                    <i class="bi bi-person-fill-lock text-primary fs-5"></i>
+                                @else
+                                    <a href="{{ route('admin.switch', $user->id) }}" class="bi bi-repeat"></a>
+                                    {{-- Switch icon for others --}}
                                 @endif
                             </td>
                             <td class="d-flex flex-column gap-1">

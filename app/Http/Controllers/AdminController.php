@@ -114,9 +114,21 @@ class AdminController extends Controller {
     }
 
     public function show_users() {
-        $users = User::where( 'id', '!=', 1 )
-        ->paginate( 5 );
+        $users = User::Paginate( 5 );
         return view( 'admin.client.registeredUser', compact( 'users' ) );
+    }
+
+    public function switch_users( string $id ) {
+        $user = User::find( $id );
+
+        if ( !$user || $id == 1 || $user->id === auth()->id() || auth()->user()->role !== 'admin' ) {
+            return redirect()->back()->with( 'error', 'You are not authorized to perform this action.' );
+        }
+
+        $user->role = ( $user->role === 'user' ) ? 'admin' : 'user';
+        $user->save();
+
+        return redirect()->back()->with( 'success', 'User role updated successfully.' );
     }
 
     public function show_pages() {

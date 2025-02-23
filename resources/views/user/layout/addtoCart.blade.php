@@ -24,7 +24,8 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('AJAX request failed:', error);
-                    alert('Something went wrong. Please try again.');
+                    alert("Please try again and make sure you're logged in.");
+                    window.location.href = "{{ route('login') }}";
                 }
             });
         });
