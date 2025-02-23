@@ -56,8 +56,8 @@
                                             Cancelled
                                         </a>
                                     @else
-                                        <a href="{{ route('order.show', $order->id) }}">
-                                            <i class="fs-3 bi bi-eye-fill text-secondary"></i>
+                                        <a href="{{ route('order.edit', $order->id) }}">
+                                            <i class="fs-3 bi bi-cloud-arrow-up-fill text-secondary"></i>
                                         </a>
                                         <form action="{{ route('order.cancel', $order->id) }}" method="POST"
                                             onsubmit="return confirm('Do you want to cancel this order?');">

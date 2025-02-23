@@ -73,6 +73,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('users/{id}/orders',[OrderController::class,'show_orders'])->name('users.order');
     Route::get('/services', [AdminController::class,'services'] )->name('admin.services');
     Route::get('/users', [AdminController::class,'show_users'] )->name('admin.users');
+    Route::get('/users/{id}/switch', [AdminController::class,'switch_users'] )->name('admin.switch');
     Route::get('/pages', [AdminController::class,'show_pages'] )->name('admin.pages');
 
 
