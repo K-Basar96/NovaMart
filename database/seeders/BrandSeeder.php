@@ -13,31 +13,95 @@ class BrandSeeder extends Seeder {
 
     public function run(): void {
         $brands = [
+            // Sportswear Brands
             [
-                'name' => 'Adidas',
-                'logo' => 'https://example.com/logos/adidas.png', // Example logo URL
+                'name' => 'Nike',
+                'logo' => 'brands/nike.png',
             ],
             [
+                'name' => 'Adidas',
+                'logo' => 'brands/adidas.png',
+            ],
+            [
+                'name' => 'Puma',
+                'logo' => 'brands/puma.png',
+            ],
+            [
+                'name' => 'Under Armour',
+                'logo' => 'brands/underarmour.png',
+            ],
+            [
+                'name' => 'Reebok',
+                'logo' => 'brands/reebok.png',
+            ],
+
+            // Electronics Brands
+            [
                 'name' => 'Apple',
-                'logo' => 'https://example.com/logos/apple.png',
+                'logo' => 'brands/apple.png',
             ],
             [
                 'name' => 'Samsung',
-                'logo' => 'https://example.com/logos/samsung.png',
+                'logo' => 'brands/samsung.png',
             ],
             [
                 'name' => 'Sony',
-                'logo' => 'https://example.com/logos/sony.png',
+                'logo' => 'brands/sony.png',
             ],
             [
                 'name' => 'LG',
-                'logo' => 'https://example.com/logos/lg.png',
+                'logo' => 'brands/lg.png',
+            ],
+            [
+                'name' => 'Dell',
+                'logo' => 'brands/dell.png',
             ],
             [
                 'name' => 'HP',
-                'logo' => 'https://example.com/logos/hp.png',
+                'logo' => 'brands/hp.png',
+            ],
+            [
+                'name' => 'Lenovo',
+                'logo' => 'brands/lenovo.png',
+            ],
+
+            // Fashion Brands
+            [
+                'name' => 'Gucci',
+                'logo' => 'brands/gucci.png',
+            ],
+            [
+                'name' => 'Louis Vuitton',
+                'logo' => 'brands/louisvuitton.png',
+            ],
+            [
+                'name' => 'Zara',
+                'logo' => 'brands/zara.png',
+            ],
+            [
+                'name' => 'H&M',
+                'logo' => 'brands/hm.png',
+            ],
+            [
+                'name' => 'Versace',
+                'logo' => 'brands/versace.png',
+            ],
+
+            // Furniture Brands
+            [
+                'name' => 'IKEA',
+                'logo' => 'brands/ikea.png',
+            ],
+            [
+                'name' => 'Ashley Furniture',
+                'logo' => 'brands/ashleyfurniture.png',
+            ],
+            [
+                'name' => 'Supreme',
+                'logo' => 'brands/supreme.png',
             ],
         ];
+
         Brand::insert( $brands );
     }
 }
