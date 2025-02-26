@@ -34,15 +34,18 @@ class CategoryController extends Controller {
 
     public function store( Request $request ) {
         $validated = $request->validate( [
-            'name' => 'required | string',
-            'description' => 'required | string',
-            'image'=>'required | image | mimes:jpg,jpeg,png',
+            'name' => 'required|string|unique:categories,name',
+            'description' => 'required|string',
+            'image'=>'required|image|mimes:jpg,jpeg,png',
         ] );
+        $extension = $request->file( 'image' )->getClientOriginalExtension();
+        $fileName = str_replace( ' ', '', strtolower( $validated[ 'name' ] ) ) . '.' . $extension;
+        $imagePath = $request->file( 'image' )->storeAs( 'categories', $fileName, 'public' );
 
         Category::create( [
             'name' => $validated[ 'name' ],
             'description' => $validated[ 'description' ],
-            'image' => $validated[ 'image' ]->store( 'categories', 'public' ),
+            'image' => $imagePath,
         ] );
 
         return redirect()->route( 'admin.categories' )->with( 'success', 'Category added successfully!' );
@@ -73,9 +76,9 @@ class CategoryController extends Controller {
         $category = Category::findorfail( $id );
 
         $validated = $request->validate( [
-            'name' => 'required | string',
-            'description' => 'required | string',
-            'image'=>'image | mimes:jpg,jpeg,png',
+            'name' => 'required|string|unique:categories,name,' . $id,
+            'description' => 'required|string',
+            'image'=>'image|mimes:jpg,jpeg,png',
         ] );
 
         if ( $request->hasFile( 'image' ) ) {
@@ -83,8 +86,9 @@ class CategoryController extends Controller {
             if ( $category->image ) {
                 Storage::disk( 'public' )->delete( $category->image );
             }
-
-            $imagePath = $request->file( 'image' )->store( 'categories', 'public' );
+            $extension = $request->file( 'image' )->getClientOriginalExtension();
+            $fileName = str_replace( ' ', '', strtolower( $validated[ 'name' ] ) ) . '.' . $extension;
+            $imagePath = $request->file( 'image' )->storeAs( 'categories', $fileName, 'public' );
             $validated[ 'image' ] = $imagePath;
         } else {
             $validated[ 'image' ] = $category->image;

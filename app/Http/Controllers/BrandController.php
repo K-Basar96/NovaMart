@@ -35,11 +35,12 @@ class BrandController extends Controller {
     public function store( Request $request ) {
 
         $validated = $request->validate( [
-            'name' => 'required',
-            'logo' => 'required | image | mimes:jpg,jpeg,png',
+            'name' => 'required|string|unique:brands,name',
+            'logo' => 'required|image|mimes:jpg,jpeg,png',
         ] );
-
-        $imagePath = $request->file( 'logo' )->store( 'brands', 'public' );
+        $extension = $request->file( 'logo' )->getClientOriginalExtension();
+        $fileName = str_replace( ' ', '', strtolower( $request->name ) ) . '.' . $extension;
+        $imagePath = $request->file( 'logo' )->storeAs( 'brands', $fileName, 'public' );
 
         Brand::create( [
             'name' => $request->name,
@@ -74,7 +75,7 @@ class BrandController extends Controller {
         $brand = Brand::findorfail( $id );
 
         $validated = $request->validate( [
-            'name' => 'required',
+            'name' => 'required|string|unique:brands,name,' . $id,
             'logo' => 'image|mimes:jpg,jpeg,png',
         ] );
 
@@ -83,7 +84,9 @@ class BrandController extends Controller {
             if ( $brand->logo ) {
                 Storage::disk( 'public' )->delete( $brand->logo );
             }
-            $imagePath = $request->file( 'logo' )->store( 'products', 'public' );
+            $extension = $request->file( 'logo' )->getClientOriginalExtension();
+            $fileName = str_replace( ' ', '', strtolower( $request->name ) ) . '.' . $extension;
+            $imagePath = $request->file( 'logo' )->storeAs( 'brands', $fileName, 'public' );
             $validated[ 'logo' ] = $imagePath;
         } else {
             $validated[ 'logo' ] = $brand->logo;
