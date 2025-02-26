@@ -14,9 +14,10 @@
         <div class="col">
             <h3>Customer Service</h3>
             <ul class="list-unstyled">
-                <li><a href="#" class="text-white-50 text-decoration-none" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us</a></li>
-                <li><a href="{{route('faqs')}}" class="text-white-50 text-decoration-none">FAQs</a></li>
-                <li><a href="{{route('returnpolicy')}}" class="text-white-50 text-decoration-none">Returns</a></li>
+                <li><a href="#" class="text-white-50 text-decoration-none" data-bs-toggle="modal"
+                        data-bs-target="#contactModal">Contact Us</a></li>
+                <li><a href="{{ route('faqs') }}" class="text-white-50 text-decoration-none">FAQs</a></li>
+                <li><a href="{{ route('returnpolicy') }}" class="text-white-50 text-decoration-none">Returns</a></li>
             </ul>
         </div>
         <div class="col">

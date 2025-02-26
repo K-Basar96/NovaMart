@@ -12,13 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable {
     use HasFactory, Notifiable;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'password',
-        'image',
-    ];
+    protected $fillable = [ 'name', 'email', 'phone', 'password', 'image', ];
+    protected $hidden = [ 'password', 'remember_token' ];
 
     public function wishlists() {
         return $this->hasMany( Wishlist::class );
