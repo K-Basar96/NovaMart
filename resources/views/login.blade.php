@@ -4,13 +4,7 @@
     @include('user.layout.forgot_password')
     <div class="container py-5">
         <div class="row justify-content-center">
-            @foreach (['success' => 'success', 'error' => 'danger'] as $key => $type)
-                @if (session($key))
-                    <div class="alert alert-{{ $type }}">
-                        {{ session($key) }}
-                    </div>
-                @endif
-            @endforeach
+            @include('alert')
             <div class="col-md-4">
                 <div class="card shadow">
                     <div class="card-body p-4">

@@ -2,11 +2,7 @@
 @section('page-name', 'Website Settings')
 @section('admin-content')
     <div class="container-fluid py-5">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @include('alert')
         <div id="div">
             <ul>
                 <li><a href="#logo">Logo</a></li>

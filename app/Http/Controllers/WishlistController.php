@@ -61,6 +61,11 @@ class WishlistController extends Controller {
     */
 
     public function store( Request $request ) {
+        if ( !auth()->check() ) {
+            return response()->json( [
+                'message' => 'You need to log in first.'
+            ], 401 );
+        }
         $user = auth()->user();
         $validated = $request->validate( [
             'product_id' => 'required|exists:products,id',
@@ -94,7 +99,7 @@ class WishlistController extends Controller {
     public function show( string $id ) {
         $user = User::findorfail($id);
         $wishlists = $user->wishlists()->with( 'product', 'product.category', 'product.brand' )->get();
-        return view( 'wishlists', compact( 'wishlists','user' ) );
+        return view( 'admin.client.wishlist', compact( 'wishlists','user' ) );
     }
 
     /**

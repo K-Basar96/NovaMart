@@ -3,11 +3,7 @@
 
 @section('admin-content')
     <div class="container py-5">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @include('alert')
         <h1 class="mb-4 text-center">List of Orders</h1>
         <div class="col-md-12 table-responsive">
             <div id="cart-items" class="mb-4">

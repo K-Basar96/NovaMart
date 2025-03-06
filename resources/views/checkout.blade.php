@@ -4,9 +4,7 @@
     <div class="container my-3 justify-content-center">
         <div class="row justify-content-center">
             <h1 class="mb-4">Confirm your order</h1>
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+            @include('alert')
 
             <!-- Address Selection -->
             <div class="mb-4 col-8">
@@ -101,7 +99,8 @@
                     description: "Order Payment",
                     order_id: formData.order_id,
                     handler: function(response) {
-                        formData.razorpay_order_id = response.razorpay_order_id; // Ensure this is set
+                        formData.razorpay_order_id = response
+                            .razorpay_order_id; // Ensure this is set
                         formData.razorpay_payment_id = response.razorpay_payment_id;
 
                         // Send AJAX request to confirm the order

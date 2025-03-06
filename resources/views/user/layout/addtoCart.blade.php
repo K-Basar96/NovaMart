@@ -6,28 +6,36 @@
 
             const form = $(this);
             const formData = form.serialize();
+            const messageContainer = form.closest('.card-body').find('.success-message');
+
 
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST',
                 data: formData,
-                success: function(response) {
-                    const successMessage = form.closest('.card-body').find(
-                        '.success-message');
-                    successMessage.text(response.message);
-                    successMessage.show();
-
-                    // Hide the success message after a few seconds
-                    setTimeout(() => {
-                        successMessage.hide();
-                    }, 3000);
+                success(response) {
+                    showMessage(messageContainer, response.message, 'green');
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', error);
-                    alert("Please try again and make sure you're logged in.");
-                    window.location.href = "{{ route('login') }}";
+                error(xhr) {
+                    if (xhr.status === 401) {
+                        alert(xhr.responseJSON.message);
+                        window.location.href = "/login";
+                    } else if (xhr.status === 400) {
+                        showMessage(messageContainer, xhr.responseJSON.message, 'red');
+                    } else {
+                        alert("An error occurred. Please try again.");
+                    }
                 }
             });
         });
+
+        function showMessage(container, message, color) {
+            container.text(message).css('color', color).fadeIn();
+
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                container.fadeOut();
+            }, 3000);
+        }
     });
 </script>

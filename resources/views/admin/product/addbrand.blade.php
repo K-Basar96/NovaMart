@@ -2,11 +2,7 @@
 @section('page-name', 'Add Brand')
 @section('admin-content')
     <div class="container py-5">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @include('alert')
         <div class="row justify-content-center">
             <h3 class="text-center mb-4">Add Brand</h3>
             <div class="col-md-4">
