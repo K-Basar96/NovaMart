@@ -4,11 +4,7 @@
 @section('admin-content')
 
     <div class="container mt-5">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        @include('alert')
         <h1 class="mb-4 text-center">Brands</h1>
         <a href="{{ route('brand.create') }}" class="btn btn-outline-primary mb-3">Add brand</a>
         <div class="table-responsive">

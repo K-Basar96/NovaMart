@@ -22,6 +22,11 @@ class CartController extends Controller {
     }
 
     public function store( Request $request ) {
+        if ( !auth()->check() ) {
+            return response()->json( [
+                'message' => 'You need to log in first.'
+            ], 401 );
+        }
         $user = auth()->user();
         $validated = $request->validate( [
             'product_id' => 'required|exists:products,id',
@@ -34,6 +39,11 @@ class CartController extends Controller {
         $cartItem = $user->carts()->where( 'product_id', $product->id )->first();
 
         if ( $cartItem ) {
+            if ($cartItem->quantity + $validated['quantity'] > $product->stock) {
+                return response()->json([
+                    'message' => 'Not enough stock available.'
+                ], 400);
+            }
             $cartItem->quantity += $validated[ 'quantity' ];
             $cartItem->save();
         } else {
@@ -53,7 +63,7 @@ class CartController extends Controller {
     public function show( string $id ) {
         $user = User::findorfail($id);
         $cartItems = $user->carts()->with( 'product' )->get();
-        return view( 'cart', compact( 'cartItems', 'user' ) );
+        return view( 'admin.client.cart', compact( 'cartItems', 'user' ) );
     }
 
     public function edit( string $id ) {
@@ -66,11 +76,15 @@ class CartController extends Controller {
         ] );
         $user = auth()->user();
         $cartItem = $user->carts()->where('product_id', $id)->firstOrFail();
+        $product = Product::findOrFail($id);
 
         if($validated['quantity']==-1){
             $cartItem->quantity > 1 ? $cartItem->decrement('quantity') : $cartItem->delete();
             $message = $cartItem->exists ? 'Quantity decreased by 1 in the cart successfully!' : 'Product removed from cart successfully!';
         } else {
+            if ($cartItem->quantity + 1 > $product->stock) {
+                return redirect()->back()->with('error', 'Not enough stock available.');
+            }
             $cartItem->increment('quantity');
             $message = 'Quantity increased by 1 in the cart successfully!';
         }

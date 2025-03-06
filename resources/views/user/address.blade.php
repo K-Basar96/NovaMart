@@ -4,11 +4,7 @@
     <div class="container my-3 justify-content-centre">
         <div class="row">
             <h1 class="mb-4">Saved Addresses</h1>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('alert')
             <div class="text-end">
                 <a href="{{ route('address.create') }}" class="btn btn-primary mb-3">Add New Address</a>
             </div>

@@ -4,16 +4,7 @@
 @section('admin-content')
 
     <div class="container mt-5">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+        @include('alert')
         <h1 class="mb-4 text-center">Users List</h1>
         <a href="{{ route('user.create') }}" class="btn btn-outline-primary mb-3">Add User</a>
         <div class="table-responsive">

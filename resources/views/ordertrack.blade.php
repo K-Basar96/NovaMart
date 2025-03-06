@@ -47,11 +47,11 @@
                                     <h6><strong>Items Ordered:</strong></h6>
                                     <ul class="list-group"> ${JSON.parse(response.order.items).map(item => 
                                         `<li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <a href='${item.item_name}' class='text-decoration-none text-secondary'>
-                                                <strong>${item.item_name}</strong> (Quantity: ${item.quantity})
-                                            </a>
-                                            <span class="badge bg-primary rounded-pill">₹${parseFloat(item.price).toFixed(2)}</span>
-                                        </li>`).join('')}
+                                                <a href='${item.item_name}' class='text-decoration-none text-secondary'>
+                                                    <strong>${item.item_name}</strong> (Quantity: ${item.quantity})
+                                                </a>
+                                                <span class="badge bg-primary rounded-pill">₹${parseFloat(item.price).toFixed(2)}</span>
+                                            </li>`).join('')}
                                     </ul>
                                 </div>
                             </div>

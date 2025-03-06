@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Order;
 use Razorpay\Api\Api;
 use App\Models\Address;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -97,6 +98,12 @@ class OrderController extends Controller {
                     'items' => json_encode( $request->items ), // Array of cart items
                     'address' => json_encode( $request->address ), // Array of address
                 ] );
+                // Update the product table and decrease the product quantity
+                foreach ( $request->items as $item ) {
+                    $product = Product::find( $item[ 'product_id' ] );
+                    $product->stock -= $item[ 'quantity' ];
+                    $product->save();
+                }
                 //clearing user cart
                 Cart::where( 'user_id', Auth::id() )->delete();
                 return response()->json( [ 'order_id' => $request->razorpay_order_id, 'tracking_id' => $trackingId, 'status' => 'success' ] );

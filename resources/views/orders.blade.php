@@ -4,11 +4,7 @@
     <div class="container my-3 justify-content-centre">
         <div class="row justify-content-center">
             <h1 class="mb-4">Your Orders</h1>
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('alert')
             <div class="col-md-8 table-responsive">
                 <div id="cart-items" class="mb-4">
                     <table class="table table-striped table-hover table-bordered text-center">

@@ -3,19 +3,11 @@
 @section('content')
     <div class="container my-3 justify-content-centre">
         <div class="row justify-content-center">
-            <h1 class="mb-4">Cart
-                @if (Auth::id() != $user->id)
-                    of {{ $user->name }}
-                @endif
-            </h1>
+            <h1 class="mb-4">Your Cart</h1>
             @php
                 $total_price = 0.0;
             @endphp
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('alert')
             <div class="col-md-8 table-responsive">
                 <div id="cart-items" class="mb-4">
                     <table class="table table-bordered text-center align-content-center">
@@ -31,9 +23,13 @@
                         <tbody>
                             @forelse($cartItems as $cartItem)
                                 <tr class="fs-5">
-                                    <td><img src="{{ asset('storage/' . $cartItem->product->image) }}" height="150"
-                                            width="200" alt="Product Image"></td>
-                                    <td>{{ $cartItem->product->name }}</td>
+                                    <td><a href="{{ route('product.show', $cartItem->product->id) }}">
+                                            <img src="{{ asset('storage/' . $cartItem->product->image) }}" height="150"
+                                                width="200" alt="Product Image"></a>
+                                    </td>
+                                    <td><a href="{{ route('product.show', $cartItem->product->id) }}"
+                                            class="text-decoration-none text-dark">{{ $cartItem->product->name }}</a>
+                                    </td>
                                     <td class="d-flex justify-content-around">
                                         <form action="{{ route('cart.update', $cartItem->product_id) }}" method="POST">
                                             @csrf
@@ -72,7 +68,7 @@
                     </table>
                 </div>
             </div>
-            <div class="text-end" {{ $cartItems->isEmpty() || Auth::id() != $user->id ? 'hidden' : '' }}>
+            <div class="text-end" {{ $cartItems->isEmpty() }}>
                 <div id="cart-summary" class="text-end mb-4">
                     <h4>Total: ₹&nbsp;<span id="cart-total">{{ number_format($total_price, 2) }}</span></h4>
                 </div>

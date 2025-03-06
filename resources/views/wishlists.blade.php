@@ -10,11 +10,7 @@
                 @endif
             </h1>
 
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+            @include('alert')
             <!-- Wishlist Action Buttons -->
             <div class="text-end">
                 <form action="{{ route('wishlist.destroy', Auth::id()) }}" method="POST" style="display:inline;">
@@ -34,7 +30,6 @@
                                     <img src="{{ asset('storage/' . $wishlist->product->image) }}"
                                         class="img-fluid rounded-start" alt="Product Image">
                                 </div>
-
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $wishlist->product->name }}</h5>
