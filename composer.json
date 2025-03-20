@@ -14,6 +14,8 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
+        "friendsofphp/php-cs-fixer": "^3.73",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.23",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
@@ -46,7 +48,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "fix": "vendor/bin/php-cs-fixer fix"
     },
     "extra": {
         "branch-alias": {

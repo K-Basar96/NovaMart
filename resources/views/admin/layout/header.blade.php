@@ -24,7 +24,7 @@
                         <hr class="dropdown-divider" />
                     </li>
                     <li><a class="dropdown-item" href="{{ route('admin.settings') }}">Settings</a></li>
-                    <li><a class="dropdown-item" href="{{ route('admin.edit', Auth::user()->id) }}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ route('admin.edit', Auth::user()->id) }}">{{ Auth::user()->name }}</a></li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>

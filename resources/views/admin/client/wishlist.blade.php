@@ -1,10 +1,10 @@
-@extends('user.layout.master')
-@section('title', 'Wishlist')
-
-@section('content')
+@extends('admin.layout.master')
+@section('page-name')
+    {{ $user->name }}'s Wishlist
+@endsection
+@section('admin-content')
     <div class="container my-3 justify-content-center">
         <div class="row justify-content-center">
-            <h1 class="mb-4">{{ $user->name }}'s Wishlist</h1>
             @include('alert')
             <div class="text-end">
                 <a href="{{ route('cart.show', $user->id) }}" class="bi bi-cart-fill btn btn-warning">&nbsp;Go to cart</a>

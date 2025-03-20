@@ -23,7 +23,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
 
-<body>
+<body class="container-fluid">
     <div class="row gap-0">
         <!-- Left Section -->
         @include('admin.layout.sidebar')
@@ -36,7 +36,7 @@
             <!-- Right Section -->
             <div data-bs-spy="scroll" data-bs-target="#left-section" data-bs-offset="0" class="scrollspy-example"
                 tabindex="0">
-                <div class="container-fluid" style="height: calc(95vh - 20px); overflow-y: auto;">
+                <div class="container-fluid" style="height: calc(95vh - 50px); overflow-y: auto;">
                     {{-- main content section --}}
                     @yield('admin-content')
                 </div>

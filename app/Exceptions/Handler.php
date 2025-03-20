@@ -3,7 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Auth\AuthenticationException; 
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
     {
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'You need to log in first.' 
+                'message' => 'You need to log in first.'
             ], 401);
         }
         return redirect()->guest(route('login'));

@@ -4,7 +4,8 @@
 
 @section('content')
     @include('user.layout.carousel')
-    <section class="featured-categories py-5" id="categories">
+
+    <section class="featured-categories py-3 py-md-5" id="categories">
         <div class="container">
             <h2 class="text-center mb-4">Featured Categories</h2>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
@@ -24,6 +25,7 @@
             </div>
         </div>
     </section>
+
 
     <section class="best-deals py-5 bg-light" id="new">
         <div class="container">
@@ -57,16 +59,19 @@
                                 <h4 class="card-title">{{ $newItem->name }}</h4>
                                 <p class="card-text">{{ $newItem->price }}</p>
                                 <div class="d-flex flex-column align-items-center w-100 mt-auto">
+                                    <div class="success-message"></div>
                                     <div class="w-100 mb-2">
-                                        <form action="{{ route('cart.store') }}" method="POST" class="add-to-cart-form">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $newItem->id }}">
-                                            <input type="hidden" name="quantity" value="1" min="1">
-                                            <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                        </form>
-                                    </div>
-                                    <div class="success-message"
-                                        style="display: none; color: green; margin-top: 10px; text-align: center;">
+                                        @if ($newItem->stock > 0)
+                                            <form action="{{ route('cart.store') }}" method="POST"
+                                                class="add-to-cart-form">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $newItem->id }}">
+                                                <input type="hidden" name="quantity" value="1" min="1">
+                                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                            </form>
+                                        @else
+                                            <p style="color: red;">Out of Stock</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -130,14 +135,18 @@
                                 <p class="card-text">{{ $product['description'] }}</p>
                                 <p class="fw-bold">{{ $product['price'] }}</p>
                                 <div class="mt-auto w-100">
-                                    <form action="{{ route('cart.store') }}" method="POST" class="add-to-cart-form">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1" min="1">
-                                        <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                                    </form>
-                                    <div class="success-message" style="display: none; color: green; margin-top: 10px;">
-                                    </div>
+                                    <div class="success-message text-center mb-2"></div>
+                                    @if ($newItem->stock > 0)
+                                        <form action="{{ route('cart.store') }}" method="POST"
+                                            class="add-to-cart-form">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1" min="1">
+                                            <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                        </form>
+                                    @else
+                                        <p class="text-center" style="color: red;">Out of Stock</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
