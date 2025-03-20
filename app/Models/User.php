@@ -9,28 +9,34 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable {
-    use HasFactory, Notifiable;
+class User extends Authenticatable
+{
+    use HasFactory;
+    use Notifiable;
 
-    protected $fillable = [ 'name', 'email', 'phone', 'password', 'image', ];
-    protected $hidden = [ 'password', 'remember_token' ];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'image', ];
+    protected $hidden = ['password', 'remember_token'];
 
-    public function wishlists() {
-        return $this->hasMany( Wishlist::class );
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 
-    public function carts() {
-        return $this->hasMany( Cart::class );
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 
     // Relationship to Orders
 
-    public function orders() {
-        return $this->hasMany( Order::class );
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
-    public function address() {
-        return $this->hasMany( Address::class );
+    public function address()
+    {
+        return $this->hasMany(Address::class);
     }
 
 }

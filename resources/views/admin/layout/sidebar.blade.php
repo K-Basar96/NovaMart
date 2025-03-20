@@ -4,7 +4,7 @@
         top: 0;
         max-height: 95vh;
         overflow-y: auto;
-
+        overflow-x: hidden;
     }
 
     .right-section {
@@ -13,7 +13,7 @@
     }
 </style>
 
-<div class="col-2 bg-light left-section" id="collapseExample">
+<div class="col-3 col-md-2 bg-light left-section" id="collapseExample">
     <div id="left-section" class="list-group">
         <div>
             <div class="card border-0" style="width: 17rem;">

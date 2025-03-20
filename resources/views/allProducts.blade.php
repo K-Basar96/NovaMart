@@ -39,17 +39,20 @@
                                         <h4 class="card-title">{{ $product->name }}</h4>
                                         <p class="card-text">{{ $product->price }}</p>
                                         <div class="d-flex flex-column align-items-center w-100 mt-auto">
+                                            <div class="success-message"></div>
                                             <div class="w-100 mb-2">
-                                                <form action="{{ route('cart.store') }}" method="POST"
-                                                    class="add-to-cart-form">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                    <input type="hidden" name="quantity" value="1" min="1">
-                                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                                </form>
-                                            </div>
-                                            <div class="success-message"
-                                                style="display: none; color: green; margin-top: 10px; text-align: center;">
+                                                @if ($product->stock > 0)
+                                                    <form action="{{ route('cart.store') }}" method="POST"
+                                                        class="add-to-cart-form">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id"
+                                                            value="{{ $product->id }}">
+                                                        <input type="hidden" name="quantity" value="1" min="1">
+                                                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                                    </form>
+                                                @else
+                                                    <p style="color: red;">Out of Stock</p>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

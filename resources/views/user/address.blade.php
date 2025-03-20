@@ -9,15 +9,15 @@
                 <a href="{{ route('address.create') }}" class="btn btn-primary mb-3">Add New Address</a>
             </div>
             @forelse ($addresses as $address)
-                <div class="card col-5 m-2">
+                <div class="card col-12 col-md-5 m-2">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title d-flex">{{ $address->address_type }}
                                 <span style="display: contents; font-size:small">
                                     {{ $address->is_default ? '(Default)' : '' }}</span>
                             </h4>
-                            <div>
-                                <a href="{{ route('address.edit', $address->id) }}" class="btn btn-warning">Edit</a>
+                            <div class="d-flex gap-1">
+                                <a href="{{ route('address.edit', $address->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('address.destroy', $address->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')

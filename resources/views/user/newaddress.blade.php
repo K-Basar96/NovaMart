@@ -12,7 +12,7 @@
             <h1 class="mb-4">Add New Address</h1>
             <form action="{{ route('address.store') }}" method="POST">
                 @csrf
-                <div class="container col-6">
+                <div class="container col-12 col-md-6">
                     <div class="form-floating mb-3">
                         <input type="text" required placeholder="recipient"
                             class="form-control @error('recipient') is-invalid @enderror" id="recipient" name="recipient"
@@ -40,7 +40,7 @@
                             <div class="invalid-feedback">{{ $message }} </div>
                         @enderror
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between flex-column flex-md-row">
                         <div class="form-floating mb-3 w-100 me-2">
                             <input type="text" required placeholder="city"
                                 class="form-control @error('city') is-invalid @enderror" id="city" name="city"
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between flex-column flex-md-row">
                         <div class="form-floating mb-3 w-100 me-2">
                             <input type="text" required placeholder="country"
                                 class="form-control @error('country') is-invalid @enderror" id="country" name="country"
@@ -82,7 +82,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between flex-column flex-md-row">
                         <div class="mb-3 w-100 me-2">
                             <label for="exact_locale" class="ms-2 form-label">
                                 Exact Locale&nbsp;
@@ -115,7 +115,7 @@
                         </div>
                     </div>
 
-                    <div class=" mb-3">
+                    <div>
                         <input type="checkbox" class="form-check-input" id="is_default" name="is_default">
                         <label for="is_default" class="form-check-label">Set as Default Address</label>
                     </div>

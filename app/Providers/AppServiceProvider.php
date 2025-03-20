@@ -1,16 +1,19 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
     /**
     * Register any application services.
     */
 
-    public function register(): void {
+    public function register(): void
+    {
         //
     }
 
@@ -18,8 +21,9 @@ class AppServiceProvider extends ServiceProvider {
     * Bootstrap any application services.
     */
 
-    public function boot(): void {
-        if ( !Session::isStarted() ) {
+    public function boot(): void
+    {
+        if (!Session::isStarted()) {
             Session::start();
         }
         Paginator::useBootstrapFive();

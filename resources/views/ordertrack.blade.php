@@ -28,7 +28,7 @@
                 e.preventDefault();
 
                 $.ajax({
-                    url: "{{ route('order.track') }}",
+                    url: "{{ route('order.tracking') }}",
                     type: "POST",
                     data: $(this).serialize(),
                     success: function(response) {
